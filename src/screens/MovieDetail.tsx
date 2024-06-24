@@ -1,19 +1,16 @@
 import React from 'react';
 import { SafeAreaView, View, Text, Button, StyleSheet } from 'react-native';
 
-export default function Home({ navigation }: any): JSX.Element {
+const MovieDetail = ({ navigation }: any): JSX.Element => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Home</Text>
-        <Button
-          title="Go to Movie Detail"
-          onPress={() => navigation.navigate('MovieDetail')}
-        />
+        <Text style={styles.title}>Movie Detail Screen</Text>
+        <Button title="Go back" onPress={() => navigation.goBack()} />
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -30,3 +27,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
+export default MovieDetail;
