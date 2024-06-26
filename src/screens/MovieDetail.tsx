@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, Image, ScrollView, StyleSheet } from 'react-native'
-import axios from 'axios'
-import MovieList from '../components/movies/MovieList'
-import { API_ACCESS_TOKEN } from '@env'
+import React, { useEffect, useState } from 'react';
+import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import { FontAwesome } from '@expo/vector-icons';  
+import MovieList from '../components/movies/MovieList';
+import { API_ACCESS_TOKEN } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Movie } from '../../src/types/app';
 
 const MovieDetail = ({ route }: any): JSX.Element => {
-  const { id } = route.params
-  const [movie, setMovie] = useState<any>(null)
-
+  const { id } = route.params;
+  const [movie, setMovie] = useState<any>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -15,22 +19,88 @@ const MovieDetail = ({ route }: any): JSX.Element => {
           headers: {
             Authorization: `Bearer ${API_ACCESS_TOKEN}`,
           },
-        })
-        setMovie(response.data)
+        });
+        setMovie(response.data);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
+    };
 
-    fetchMovieData()
-  }, [id])
+    const checkIsFavorite = async (id: number): Promise<boolean> => {
+      try {
+        const initialData: string | null = await AsyncStorage.getItem('@FavoriteList');
+        if (initialData !== null) {
+          const favMovieList: Movie[] = JSON.parse(initialData);
+          return favMovieList.some(movie => movie.id === id);
+        }
+        return false;
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+        return false;
+      }
+    };
+
+    const checkFavoriteStatus = async () => {
+      const isFav = await checkIsFavorite(id);
+      setIsFavorite(isFav);
+    };
+
+    fetchMovieData();
+    checkFavoriteStatus();
+  }, [id]);
+
+  const addFavorite = async (movie: Movie): Promise<void> => {
+    try {
+      const initialData: string | null = await AsyncStorage.getItem('@FavoriteList');
+      // console.log('Initial Data:'); 
+  
+      let favMovieList: Movie[] = [];
+  
+      if (initialData !== null) {
+        favMovieList = [...JSON.parse(initialData), movie];
+      } else {
+        favMovieList = [movie];
+      }
+  
+      await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
+      setIsFavorite(true);
+      console.log(favMovieList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  const removeFavorite = async (id: number): Promise<void> => {
+    try {
+      const initialData: string | null = await AsyncStorage.getItem('@FavoriteList');
+      if (initialData !== null) {
+        let favMovieList: Movie[] = JSON.parse(initialData);
+        favMovieList = favMovieList.filter(movie => movie.id !== id);
+  
+        await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
+        setIsFavorite(false);
+        console.log([]);  
+      }
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
+  };
+  
+
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      removeFavorite(id);
+    } else {
+      addFavorite(movie);
+    }
+  };
 
   if (!movie) {
     return (
       <View style={styles.loadingContainer}>
         <Text>Loading...</Text>
       </View>
-    )
+    );
   }
 
   return (
@@ -38,7 +108,16 @@ const MovieDetail = ({ route }: any): JSX.Element => {
       <View style={styles.container}>
         <Image source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` }} style={styles.image} />
         <Text style={styles.title}>{movie.title}</Text>
-        <Text style={styles.rating}>⭐ {movie.vote_average}</Text>
+        <View style={styles.favoriteContainer}>
+          <Text style={styles.rating}>⭐ {movie.vote_average}</Text>
+          <TouchableOpacity onPress={toggleFavorite}>
+            {isFavorite ? (
+              <FontAwesome name="heart" size={24} color="red" />
+            ) : (
+              <FontAwesome name="heart-o" size={24} color="gray" />
+            )}
+          </TouchableOpacity>
+        </View>
         <Text style={styles.overview}>{movie.overview}</Text>
         <View style={styles.infoContainer}>
           <Text>Original Language: {movie.original_language}</Text>
@@ -55,8 +134,8 @@ const MovieDetail = ({ route }: any): JSX.Element => {
         </View>
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   loadingContainer: {
@@ -82,6 +161,12 @@ const styles = StyleSheet.create({
   rating: {
     fontSize: 18,
     color: '#FFD700',
+    marginVertical: 8,
+  },
+  favoriteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginVertical: 8,
   },
   overview: {
@@ -110,6 +195,6 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     width: '100%',
   },
-})
+});
 
-export default MovieDetail
+export default MovieDetail;
