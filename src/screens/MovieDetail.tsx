@@ -86,7 +86,6 @@ const MovieDetail = ({ route }: any): JSX.Element => {
     }
   };
 
-
   const toggleFavorite = () => {
     if (isFavorite) {
       removeFavorite(id);
@@ -105,25 +104,37 @@ const MovieDetail = ({ route }: any): JSX.Element => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View style={styles.imageContainer}>
         <Image source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` }} style={styles.image} />
-        <Text style={styles.title}>{movie.title}</Text>
-        <View style={styles.favoriteContainer}>
-          <Text style={styles.rating}>⭐ {movie.vote_average}</Text>
-          <TouchableOpacity onPress={toggleFavorite}>
+        <View style={styles.overlay}>
+          <View style={styles.overlayTextContainer}>
+            <Text style={styles.title}>{movie.title}</Text>
+            <Text style={styles.rating}>⭐ {movie.vote_average}</Text>
+          </View>
+          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
             {isFavorite ? (
               <FontAwesome name="heart" size={24} color="red" />
             ) : (
-              <FontAwesome name="heart-o" size={24} color="gray" />
+              <FontAwesome name="heart-o" size={24} color="white" />
             )}
           </TouchableOpacity>
         </View>
+      </View>
+      <View style={styles.container}>
         <Text style={styles.overview}>{movie.overview}</Text>
         <View style={styles.infoContainer}>
-          <Text>Original Language: {movie.original_language}</Text>
-          <Text>Popularity: {movie.popularity}</Text>
-          <Text>Release Date: {new Date(movie.release_date).toDateString()}</Text>
-          <Text>Vote Count: {movie.vote_count}</Text>
+          <View style={styles.infoColumn}>
+            <Text style={styles.infoItem}>Original Language:</Text>
+            <Text>{movie.original_language}</Text>
+            <Text style={styles.infoItem}>Popularity:</Text>
+            <Text>{movie.popularity}</Text>
+          </View>
+          <View style={styles.infoColumn}>
+            <Text style={styles.infoItem}>Release Date:</Text>
+            <Text>{new Date(movie.release_date).toDateString()}</Text>
+            <Text style={styles.infoItem}>Vote Count:</Text>
+            <Text>{movie.vote_count}</Text>
+          </View>
         </View>
         <View style={styles.recommendationContainer}>
           <MovieList
@@ -145,51 +156,58 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: 32,
     padding: 16,
+  },
+  imageContainer: {
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: 200,
-    borderRadius: 10,
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+  },
+  overlayTextContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 8,
+    color: 'white',
   },
   rating: {
     fontSize: 18,
     color: '#FFD700',
-    marginVertical: 8,
   },
-  favoriteContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 8,
+  favoriteButton: {
+    marginLeft: 10,
   },
   overview: {
     fontSize: 16,
     marginVertical: 8,
   },
   infoContainer: {
-    marginVertical: 8,
-    alignItems: 'flex-start',
-    width: '100%',
-  },
-  infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 8,
+    width: '100%',
+  },
+  infoColumn: {
+    flex: 1,
+  },
+  infoItem: {
+    fontSize: 14,
+    fontWeight: 'bold',
     marginVertical: 4,
-  },
-  infoLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  infoText: {
-    fontSize: 14,
-    fontWeight: '400',
   },
   recommendationContainer: {
     marginVertical: 16,
