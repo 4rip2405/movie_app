@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  
+
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',

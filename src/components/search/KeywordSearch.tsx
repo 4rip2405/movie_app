@@ -64,10 +64,10 @@ const KeywordSearch = () => {
                             </View>
                         ))}
                     </View>
-                ) 
-                : (
-                    <Text style={styles.noSearchText}></Text>
-                )}
+                )
+                    : (
+                        <Text style={styles.noSearchText}></Text>
+                    )}
             </ScrollView>
         </View>
     );
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: '#f5f5f5',
+        
     },
     searchBar: {
         flexDirection: 'row',
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-      },
-      gridItem: {
+    },
+    gridItem: {
         margin: 8,
-      },
-      noSearchText: {
+    },
+    noSearchText: {
         fontSize: 18,
         color: 'gray',
-      },
+    },
 });
 
 export default KeywordSearch;
