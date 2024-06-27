@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Feather } from '@expo/vector-icons'
 import HomeStackNavigation from './HomeStackNavigation'
 import FavStackNavigation from './FavStackNavigation'
-import Search from '../screens/Search'
+import SearchStackNavigation from './SearchStackNavigation'
 
 
 const Tab = createBottomTabNavigator();
@@ -21,8 +21,8 @@ const BottomTabNavigator = (): JSX.Element => (
       }}
     />
     <Tab.Screen
-      name="Search"
-      component={Search}
+      name="cari"
+      component={SearchStackNavigation}
       options={{
         tabBarIcon: ({ color }) => (
           <Feather name="search" size={28} color={color} />
