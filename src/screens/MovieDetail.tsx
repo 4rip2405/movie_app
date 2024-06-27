@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import { FontAwesome } from '@expo/vector-icons';  
+import { FontAwesome } from '@expo/vector-icons';
 import MovieList from '../components/movies/MovieList';
 import { API_ACCESS_TOKEN } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +11,7 @@ const MovieDetail = ({ route }: any): JSX.Element => {
   const { id } = route.params;
   const [movie, setMovie] = useState<any>(null);
   const [isFavorite, setIsFavorite] = useState(false);
-  
+
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -53,15 +53,15 @@ const MovieDetail = ({ route }: any): JSX.Element => {
     try {
       const initialData: string | null = await AsyncStorage.getItem('@FavoriteList');
       // console.log('Initial Data:'); 
-  
+
       let favMovieList: Movie[] = [];
-  
+
       if (initialData !== null) {
         favMovieList = [...JSON.parse(initialData), movie];
       } else {
         favMovieList = [movie];
       }
-  
+
       await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
       setIsFavorite(true);
       console.log(favMovieList);
@@ -69,23 +69,23 @@ const MovieDetail = ({ route }: any): JSX.Element => {
       console.log(error);
     }
   }
-  
+
   const removeFavorite = async (id: number): Promise<void> => {
     try {
       const initialData: string | null = await AsyncStorage.getItem('@FavoriteList');
       if (initialData !== null) {
         let favMovieList: Movie[] = JSON.parse(initialData);
         favMovieList = favMovieList.filter(movie => movie.id !== id);
-  
+
         await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
         setIsFavorite(false);
-        console.log([]);  
+        console.log([]);
       }
     } catch (error) {
       console.error('Error removing favorite:', error);
     }
   };
-  
+
 
   const toggleFavorite = () => {
     if (isFavorite) {
