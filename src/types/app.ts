@@ -43,3 +43,17 @@ export interface MovieListProps {
     size: { width: number; height: number }
     coverType: 'poster' | 'backdrop'
   }
+  export interface Genre {
+    id: number;
+    name: string;
+  }
+  export type RootStackParamList = {
+    CategorySearch: undefined;
+    CategorySearchResult: {
+      genreName: string;
+      movies: any[];
+    }
+  }
+  
+
+  
