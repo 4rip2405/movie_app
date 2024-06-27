@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = (): JSX.Element => (
   <Tab.Navigator>
     <Tab.Screen
-      name="Beranda"
+      name="home"
       component={HomeStackNavigation}
       options={{
         tabBarIcon: ({ color }) => (
@@ -21,7 +21,7 @@ const BottomTabNavigator = (): JSX.Element => (
       }}
     />
     <Tab.Screen
-      name="cari"
+      name="search"
       component={SearchStackNavigation}
       options={{
         tabBarIcon: ({ color }) => (
@@ -31,7 +31,7 @@ const BottomTabNavigator = (): JSX.Element => (
       }}
     />
     <Tab.Screen
-      name="Favorit"
+      name="favorite"
       component={FavStackNavigation}
       options={{
         tabBarIcon: ({ color }) => (
